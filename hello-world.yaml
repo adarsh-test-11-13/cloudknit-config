@@ -1,0 +1,39 @@
+apiVersion: stable.compuzest.com/v1
+kind: Team
+metadata:
+  name: default
+  namespace: adarsh-test-11-13-config
+spec:
+  teamName: default
+  configRepo:
+    source: https://github.com/adarsh-test-11-13/cloudknit-config.git
+    path: .
+
+---
+
+apiVersion: stable.compuzest.com/v1
+kind: Environment
+metadata:
+  name: adarsh-test-11-13-hello-world
+  namespace: adarsh-test-11-13-config
+spec:
+  teamName: default
+  envName: dev
+  components:
+    - name: images
+      type: terraform
+      module:
+        source: aws
+        name: s3-bucket
+      variables:
+        - name: bucket
+          value: "adarsh-test-11-13-dev-images"
+    - name: videos
+      type: terraform
+      dependsOn: [images]
+      module:
+        source: aws
+        name: s3-bucket
+      variables:
+        - name: bucket
+          value: "adarsh-test-11-13-dev-images"
